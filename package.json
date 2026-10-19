@@ -1,0 +1,12 @@
+{
+  "name": "mo-phong-bai-day-ai",
+  "version": "1.0.0",
+  "description": "Cong cu tao va trinh chieu mo phong bai day tuong tac cho giao vien tieu hoc",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
