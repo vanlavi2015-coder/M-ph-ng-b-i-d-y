@@ -143,6 +143,42 @@ function addAreaVideo(plan){
  draw();return host;
 }
 
+const SLIDER_GEOMETRY = new Set(["triangle","cube","cuboid","rectangle","square","parallelogram","circle","geometry","volume"]);
+function geometryInteractiveHtml(plan){
+ return '<div class="sim-layout"><div class="svgwrap" id="geoDrawing"></div><div class="controls"><strong>Thay đổi kích thước</strong><label for="geoA" style="margin-top:10px">Kích thước a / bán kính r: <span id="geoAVal">6</span></label><input id="geoA" type="range" min="2" max="10" value="6"><label for="geoB" style="margin-top:10px">Kích thước b: <span id="geoBVal">4</span></label><input id="geoB" type="range" min="2" max="10" value="4"><label for="geoH" style="margin-top:10px">Chiều cao h: <span id="geoHVal">5</span></label><input id="geoH" type="range" min="2" max="10" value="5"><div class="readout">Kết quả: <span id="geoMeasure">—</span></div><p class="note">Kéo thanh trượt để xem hình và kết quả thay đổi.</p></div></div>';
+}
+function updateGeometry(plan){
+ const a=+$("geoA").value,b=+$("geoB").value,h=+$("geoH").value,k=plan.kind;
+ const topic=String(plan.title||"")+" "+String(plan.explanation||"");
+ const area=/diện tích/i.test(topic),perimeter=/chu vi/i.test(topic),volume=/thể tích/i.test(topic);
+ ["geoAVal","geoBVal","geoHVal"].forEach((id,i)=>$(id).textContent=[a,b,h][i]);
+ let svg="",result="Quan sát đặc điểm của hình";
+ const head='<text x="250" y="25" text-anchor="middle" font-size="18" font-weight="700" fill="#17324d">';
+ if(k==="triangle"){
+  const x1=250-a*10,x2=250+a*10,yt=180-h*11;
+  svg='<polygon points="'+x1+',180 '+x2+',180 250,'+yt+'" fill="#93c5fd" fill-opacity=".7" stroke="#1d4ed8" stroke-width="3"/><path d="M250 '+yt+'V180" stroke="#dc2626" stroke-width="3" stroke-dasharray="5 4"/><text x="250" y="210" text-anchor="middle" font-size="15" fill="#17324d">Đáy a = '+a+' · chiều cao h = '+h+'</text>';
+  result=area?'S = '+a+' × '+h+' ÷ 2 = '+(a*h/2)+' cm²':'Tam giác có 3 cạnh, 3 đỉnh và 3 góc';
+ } else if(k==="circle"){
+  const r=a*8;
+  svg='<circle cx="250" cy="115" r="'+r+'" fill="#93c5fd" fill-opacity=".55" stroke="#1d4ed8" stroke-width="3"/><path d="M250 115H'+(250+r)+'" stroke="#dc2626" stroke-width="3"/><text x="'+(250+r/2)+'" y="105" text-anchor="middle" font-size="15" fill="#b91c1c">r = '+a+'</text>';
+  result=area?'S ≈ '+a+' × '+a+' × 3,14 = '+(a*a*3.14).toLocaleString("vi-VN")+' cm²':perimeter?'C ≈ 2 × '+a+' × 3,14 = '+(2*a*3.14).toLocaleString("vi-VN")+' cm':'Đường kính d = '+(2*a)+' cm';
+ } else if(k==="parallelogram"){
+  const w=a*13,hh=h*11;
+  svg='<polygon points="'+(250-w/2+28)+','+(115-hh/2)+' '+(250+w/2+28)+','+(115-hh/2)+' '+(250+w/2-28)+','+(115+hh/2)+' '+(250-w/2-28)+','+(115+hh/2)+'" fill="#93c5fd" fill-opacity=".7" stroke="#1d4ed8" stroke-width="3"/><text x="250" y="210" text-anchor="middle" font-size="15" fill="#17324d">Đáy a = '+a+' · chiều cao h = '+h+'</text>';
+  result=area?'S = '+a+' × '+h+' = '+(a*h)+' cm²':'Hai cặp cạnh đối diện song song và bằng nhau';
+ } else if(k==="rectangle"||k==="square"||k==="geometry"){
+  const ww=(k==="square"?a:b)*15,hh=(k==="square"?a:h)*12;
+  svg='<rect x="'+(250-ww/2)+'" y="'+(115-hh/2)+'" width="'+ww+'" height="'+hh+'" fill="#86efac" fill-opacity=".7" stroke="#15803d" stroke-width="3"/><text x="250" y="210" text-anchor="middle" font-size="15" fill="#17324d">Dài '+a+' · rộng '+(k==="square"?a:b)+' cm</text>';
+  result=area?'S = '+a+' × '+(k==="square"?a:b)+' = '+(a*(k==="square"?a:b))+' cm²':'Quan sát các cạnh và góc vuông';
+ } else if(k==="cube"||k==="cuboid"||k==="volume"){
+  const ww=a*8,dd=(k==="cube"?a:b)*5,hh=(k==="cube"?a:h)*7,x=155,y=55;
+  svg='<polygon points="'+x+','+(y+dd)+' '+(x+dd)+','+y+' '+(x+dd+ww)+','+(y+dd)+' '+(x+ww)+','+(y+2*dd)+'" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="2"/><polygon points="'+x+','+(y+dd)+' '+(x+ww)+','+(y+2*dd)+' '+(x+ww)+','+(y+2*dd+hh)+' '+x+','+(y+dd+hh)+'" fill="#60a5fa" stroke="#1d4ed8" stroke-width="2"/><polygon points="'+(x+ww)+','+(y+2*dd)+' '+(x+dd+ww)+','+(y+dd)+' '+(x+dd+ww)+','+(y+dd+hh)+' '+(x+ww)+','+(y+2*dd+hh)+'" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/>';
+  result=volume?'V = '+a+' × '+(k==="cube"?a:b)+' × '+(k==="cube"?a:h)+' = '+(a*(k==="cube"?a:b)*(k==="cube"?a:h))+' cm³':k==="cube"?'6 mặt vuông bằng nhau':'6 mặt, các mặt đối diện bằng nhau';
+ }
+ $("geoDrawing").innerHTML='<svg viewBox="0 0 500 230" width="100%">'+head+(k==="circle"?"Hình tròn":k==="triangle"?"Hình tam giác":k==="parallelogram"?"Hình bình hành":k==="cube"?"Hình lập phương":k==="cuboid"||k==="volume"?"Hình hộp chữ nhật":k==="square"?"Hình vuông":"Hình chữ nhật")+'</text>'+svg+'</svg>';
+ $("geoMeasure").textContent=result;
+}
+
 function render(plan){
  currentPlan=plan; score=0; answered=new Set();
  $("modeTag").textContent=plan.source==="ai"?"AI ĐÃ TẠO KỊCH BẢN":"MÔ PHỎNG MẪU CÓ TƯƠNG TÁC";
@@ -151,12 +187,15 @@ function render(plan){
  let sim="";
  if(plan.kind==="trapezoid"){
   sim=`<div class="sim-layout"><div class="svgwrap" id="trapDrawing">${trapezoidSvg(12,8,5)}</div><div class="controls"><label for="baseA">Đáy lớn a: <span id="aVal">12</span> cm</label><input id="baseA" type="range" min="6" max="16" value="12"><label for="baseB" style="margin-top:12px">Đáy bé b: <span id="bVal">8</span> cm</label><input id="baseB" type="range" min="3" max="10" value="8"><label for="height" style="margin-top:12px">Chiều cao h: <span id="hVal">5</span> cm</label><input id="height" type="range" min="2" max="10" value="5"><div class="readout">Diện tích: <span id="areaVal">50</span> cm²</div><p class="note">Kéo thanh trượt để thử các trường hợp khác nhau.</p></div></div>`;
+ } else if(SLIDER_GEOMETRY.has(plan.kind)){
+  sim=geometryInteractiveHtml(plan);
  } else {
   sim=`<div class="sim-layout"><div class="svgwrap">${areaScene(areaShape(plan),0)}</div><div class="controls"><strong>Thử thách quan sát</strong><p class="note">Đọc nội dung mô phỏng, trao đổi với bạn bên cạnh rồi trả lời câu hỏi phía dưới.</p><button class="btn secondary" id="showExplain">Hiện gợi ý</button><div id="hint" class="note"></div></div></div>`;
  }
  $("result").innerHTML=`<div class="simhead"><div><h2>${esc(plan.title)}</h2><p class="note">Môn ${esc(plan.subject)} · Lớp ${esc(plan.grade)}</p></div><span class="tag">MÔ PHỎNG</span></div><div class="canvas">${sim}<div id="areaVideoMount"></div><div class="explain"><strong>💡 Kiến thức trọng tâm</strong><div>${esc(plan.explanation)}</div></div><div class="steps">${steps.map((s,i)=>`<div class="step ${i===0?'active':''}"><strong>${i+1}. ${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join("")}</div></div><div class="quiz"><div class="topline"><h2>🧠 Kiểm tra nhanh</h2><span class="tag">Điểm: <span id="score">0</span>/${questions.length*10}</span></div><p class="note">Chọn một đáp án cho mỗi câu. Mỗi câu đúng được 10 điểm.</p>${questions.map((q,i)=>`<div class="qcard" id="qcard${i}"><h3>Câu ${i+1}. ${esc(q.q)}</h3><div class="opts">${q.options.map((o,j)=>`<button class="opt" data-q="${i}" data-a="${j}">${"ABCD"[j]}. ${esc(o)}</button>`).join("")}</div><div class="feedback" id="feedback${i}"></div></div>`).join("")}</div><div class="actions"><button class="btn secondary" id="restart">↻ Làm lại câu hỏi</button><button class="btn light" id="copyPlan">Sao chép kịch bản</button></div>`;
  {const mount=$("areaVideoMount");if(mount)mount.appendChild(addAreaVideo(plan));}
  if(plan.kind==="trapezoid") ["baseA","baseB","height"].forEach(id=>$(id).addEventListener("input",updateTrap));
+ else if(SLIDER_GEOMETRY.has(plan.kind)) { ["geoA","geoB","geoH"].forEach(id=>$(id).addEventListener("input",()=>updateGeometry(plan))); updateGeometry(plan); }
  else $("showExplain").addEventListener("click",()=>{$("hint").textContent=plan.steps.map((s,i)=>`${i+1}. ${s.title}: ${s.text}`).join(" ");});
  $("result").querySelectorAll(".opt").forEach(btn=>btn.addEventListener("click",()=>answer(btn,questions)));
  $("restart").addEventListener("click",()=>render(currentPlan));
