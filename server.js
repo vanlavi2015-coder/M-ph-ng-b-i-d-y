@@ -152,6 +152,17 @@ async function generate(input) {
   const content = data.choices?.[0]?.message?.content || "";
   const plan = JSON.parse(content.replace(/^```json\s*/i,"").replace(/```$/,"").trim());
   if (!Array.isArray(plan.steps) || !Array.isArray(plan.questions)) throw new Error("Dữ liệu AI trả về chưa đúng định dạng.");
+  // Chọn loại hình minh họa theo chủ đề người dùng nhập, không phụ thuộc hoàn toàn vào dự đoán của AI.
+  const topicKey = topic.toLocaleLowerCase("vi");
+  if (/hình thang|diện tích hình thang/.test(topicKey)) plan.kind = "trapezoid";
+  else if (/số thập phân|hàng thập phân|phần mười|phần trăm/.test(topicKey)) plan.kind = "decimal";
+  else if (/phân số|tử số|mẫu số|quy đồng/.test(topicKey)) plan.kind = "fraction";
+  else if (/chủ ngữ|vị ngữ|trạng ngữ|từ đồng nghĩa|nhân hóa|câu ghép/.test(topicKey) || subject === "vietnamese") plan.kind = "sentence";
+  else if (/vòng tuần hoàn nước|bay hơi|ngưng tụ|mưa|nước trong tự nhiên/.test(topicKey)) plan.kind = "water";
+  else if (/cây|thực vật|quang hợp|nảy mầm|sinh trưởng/.test(topicKey)) plan.kind = "plant";
+  else if (/nam châm|từ tính|lực hút/.test(topicKey)) plan.kind = "magnet";
+  else if (/mặt trời|hệ mặt trời|hành tinh|trái đất|ngày và đêm/.test(topicKey)) plan.kind = "solar";
+  else if (/đường tròn|hình tròn|tam giác|hình chữ nhật|hình vuông|chu vi|diện tích/.test(topicKey)) plan.kind = "geometry";
   plan.source = "ai";
   return plan;
 }
