@@ -126,6 +126,98 @@ function fallbackPlan(input) {
       {q:"Đường cao ứng với một đáy của tam giác phải như thế nào?",options:["Song song với đáy","Bằng đáy","Vuông góc với đáy","Luôn nằm ngoài tam giác"],answer:2,why:"Đường cao là đoạn thẳng kẻ từ một đỉnh và vuông góc với đáy tương ứng."},
       {q:"Tam giác có một góc vuông gọi là gì?",options:["Tam giác nhọn","Tam giác tù","Tam giác đều","Tam giác vuông"],answer:3,why:"Tam giác có một góc vuông là tam giác vuông."}
     ];
+  } else if (subject === "math" && /đường tròn|hình tròn|chu vi hình tròn|diện tích hình tròn/i.test(topic)) {
+    kind = "circle";
+    const area = /diện tích/.test(topic);
+    explanation = area ? "Diện tích hình tròn được tính bằng bán kính nhân bán kính rồi nhân với 3,14: S = r × r × 3,14." : "Chu vi hình tròn bằng đường kính nhân 3,14 hoặc bán kính nhân 2 rồi nhân 3,14.";
+    steps = [
+      {title:"Quan sát",text:"Xác định tâm, bán kính r và đường kính d của hình tròn."},
+      {title:"Thao tác",text:"Thay đổi bán kính để quan sát chu vi hoặc diện tích thay đổi."},
+      {title:"Khái quát",text:area ? "Rút ra S = r × r × 3,14." : "Rút ra C = d × 3,14 = 2 × r × 3,14."}
+    ];
+    questions = [
+      {q:"Đường kính hình tròn bằng bao nhiêu lần bán kính?",options:["1 lần","2 lần","3 lần","4 lần"],answer:1,why:"Đường kính bằng hai lần bán kính."},
+      {q:area ? "Bán kính hình tròn 2 cm, lấy π ≈ 3,14. Diện tích là?" : "Đường kính hình tròn 10 cm, lấy π ≈ 3,14. Chu vi là?",options:area ? ["6,28 cm²","12,56 cm²","4 cm²","8 cm²"] : ["15,7 cm","31,4 cm","20 cm","10 cm"],answer:area ? 1 : 1,why:area ? "S = 2 × 2 × 3,14 = 12,56 cm²." : "C = 10 × 3,14 = 31,4 cm."},
+      {q:"Tâm hình tròn là điểm nào?",options:["Điểm trên đường tròn","Điểm cách đều mọi điểm trên đường tròn","Điểm cuối của đường kính","Một điểm bất kỳ bên ngoài"],answer:1,why:"Tâm cách đều mọi điểm trên đường tròn."}
+    ];
+  } else if (subject === "math" && /hình bình hành/i.test(topic)) {
+    kind = "parallelogram";
+    explanation = /diện tích/.test(topic) ? "Diện tích hình bình hành bằng độ dài đáy nhân với chiều cao tương ứng: S = a × h." : "Hình bình hành có hai cặp cạnh đối diện song song và bằng nhau.";
+    steps = [
+      {title:"Quan sát",text:"Nhận biết hai cặp cạnh đối diện song song."},
+      {title:"Khám phá",text:"Cắt ghép phần tam giác ở một bên để tạo thành hình chữ nhật có cùng đáy và chiều cao."},
+      {title:"Khái quát",text:/diện tích/.test(topic) ? "Diện tích hình bình hành bằng đáy nhân chiều cao tương ứng." : "Các cạnh đối diện song song và bằng nhau."}
+    ];
+    questions = [
+      {q:"Hình bình hành có mấy cặp cạnh đối diện song song?",options:["1 cặp","2 cặp","3 cặp","Không có"],answer:1,why:"Hình bình hành có hai cặp cạnh đối diện song song."},
+      {q:"Đáy 8 cm, chiều cao tương ứng 4 cm. Diện tích là?",options:["12 cm²","24 cm²","32 cm²","64 cm²"],answer:2,why:"S = 8 × 4 = 32 cm²."},
+      {q:"Chiều cao của hình bình hành phải như thế nào với đáy?",options:["Song song","Vuông góc","Bằng đáy","Luôn dài hơn đáy"],answer:1,why:"Chiều cao là khoảng cách vuông góc giữa hai đáy song song."}
+    ];
+  } else if (subject === "math" && /tỉ số phần trăm|tỉ số|phần trăm|giá trị phần trăm/i.test(topic)) {
+    kind = "percent";
+    explanation = "Tỉ số phần trăm cho biết tỉ số của hai số tính theo phần trăm; 1% = 1/100.";
+    steps = [
+      {title:"Biểu diễn",text:"Chia toàn bộ thành 100 phần bằng nhau."},
+      {title:"Thao tác",text:"Tô số phần tương ứng với tỉ lệ phần trăm."},
+      {title:"Vận dụng",text:"Tìm tỉ số phần trăm hoặc giá trị phần trăm trong tình huống thực tế."}
+    ];
+    questions = [
+      {q:"25% bằng phân số nào?",options:["25/10","25/100","1/25","100/25"],answer:1,why:"Phần trăm nghĩa là trên 100."},
+      {q:"10% của 200 là bao nhiêu?",options:["2","10","20","100"],answer:2,why:"200 × 10 ÷ 100 = 20."},
+      {q:"Lớp có 20 học sinh, 5 bạn đi xe đạp. Tỉ lệ là bao nhiêu?",options:["5%","20%","25%","50%"],answer:2,why:"5/20 × 100% = 25%."}
+    ];
+  } else if (subject === "math" && /thể tích|xăng-ti-mét khối|đề-xi-mét khối|mét khối/i.test(topic)) {
+    kind = "volume";
+    explanation = "Thể tích cho biết phần không gian mà một hình khối chiếm chỗ; có thể đếm bằng các khối đơn vị.";
+    steps = [
+      {title:"Quan sát",text:"Quan sát khối và các khối đơn vị dùng để lấp đầy."},
+      {title:"Thao tác",text:"Đếm số khối theo chiều dài, chiều rộng và chiều cao hoặc theo từng lớp."},
+      {title:"Khái quát",text:"Nêu thể tích bằng số khối đơn vị; liên hệ cm³, dm³ và m³."}
+    ];
+    questions = [
+      {q:"Thể tích cho biết điều gì?",options:["Diện tích mặt ngoài","Phần không gian hình chiếm chỗ","Độ dài cạnh","Số mặt"],answer:1,why:"Thể tích đo phần không gian mà vật chiếm chỗ."},
+      {q:"1 dm³ bằng bao nhiêu cm³?",options:["10 cm³","100 cm³","1000 cm³","10 000 cm³"],answer:2,why:"1 dm = 10 cm nên 1 dm³ = 10 × 10 × 10 = 1000 cm³."},
+      {q:"Một khối hộp có 2 lớp, mỗi lớp 12 khối đơn vị. Có tất cả bao nhiêu khối?",options:["10","12","14","24"],answer:3,why:"2 × 12 = 24 khối đơn vị."}
+    ];
+  } else if (subject === "math" && /đơn vị đo diện tích|ki-lô-mét vuông|héc-ta|đo lường|đổi đơn vị/i.test(topic)) {
+    kind = "units";
+    explanation = "Khi đổi đơn vị đo, cần dựa vào quan hệ giữa các đơn vị và ghi đúng đơn vị của kết quả.";
+    steps = [
+      {title:"Nhận biết",text:"Xác định đơn vị đo đang dùng và đơn vị cần đổi."},
+      {title:"Thực hiện",text:"Dùng bảng đơn vị hoặc quan hệ quy đổi để đổi số đo."},
+      {title:"Kiểm tra",text:"Ước lượng kết quả và ghi đúng đơn vị."}
+    ];
+    questions = [
+      {q:"1 ha bằng bao nhiêu m²?",options:["100 m²","1000 m²","10 000 m²","100 000 m²"],answer:2,why:"1 ha = 10 000 m²."},
+      {q:"1 km² bằng bao nhiêu ha?",options:["10 ha","100 ha","1000 ha","10 000 ha"],answer:1,why:"1 km² = 100 ha."},
+      {q:"Khi đổi đơn vị diện tích liền kề, mỗi bậc thường gấp hoặc kém bao nhiêu lần?",options:["2 lần","5 lần","10 lần","100 lần"],answer:3,why:"Các đơn vị diện tích liền kề hơn kém nhau 100 lần."}
+    ];
+  } else if (subject === "math" && /tỉ lệ bản đồ|bản đồ|tìm hai số khi biết tổng|tìm hai số khi biết hiệu/i.test(topic)) {
+    kind = "ratio";
+    explanation = "Dùng sơ đồ đoạn thẳng hoặc các phần bằng nhau để biểu diễn tỉ lệ và tìm giá trị từng phần.";
+    steps = [
+      {title:"Tóm tắt",text:"Xác định tổng hoặc hiệu và tỉ số đã cho."},
+      {title:"Biểu diễn",text:"Vẽ sơ đồ các phần bằng nhau theo tỉ số."},
+      {title:"Giải toán",text:"Tìm giá trị một phần rồi suy ra các số cần tìm."}
+    ];
+    questions = [
+      {q:"Tỉ số 2 : 3 nghĩa là gì?",options:["Hai số hơn kém nhau 3","Số thứ nhất 2 phần, số thứ hai 3 phần","Tổng bằng 5","Hiệu bằng 1"],answer:1,why:"Tỉ số 2 : 3 biểu diễn hai số bằng 2 phần và 3 phần cùng loại."},
+      {q:"Tổng hai số là 25, tỉ số 2 : 3. Số bé là?",options:["5","10","15","20"],answer:1,why:"Tổng phần 2+3=5; mỗi phần 25÷5=5; số bé 2×5=10."},
+      {q:"Trên bản đồ 1 cm ứng với 1 km ngoài thực tế. 3 cm ứng với?",options:["300 m","1 km","3 km","30 km"],answer:2,why:"3 cm trên bản đồ ứng với 3 km ngoài thực tế."}
+    ];
+  } else if (subject === "math" && /số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân/i.test(topic)) {
+    kind = /thập phân/.test(topic) ? "decimal" : "arithmetic";
+    explanation = "Thực hiện phép tính theo đúng thứ tự, đặt tính thẳng hàng khi cần và kiểm tra kết quả bằng phép tính ngược hoặc ước lượng.";
+    steps = [
+      {title:"Đọc đề",text:"Xác định phép tính và dữ kiện đã cho."},
+      {title:"Thực hiện",text:"Làm từng bước, chú ý giá trị hàng và dấu phẩy thập phân nếu có."},
+      {title:"Kiểm tra",text:"Ước lượng hoặc dùng phép tính ngược để kiểm tra kết quả."}
+    ];
+    questions = [
+      {q:"Khi cộng các số thập phân, dấu phẩy cần được đặt thế nào?",options:["Thẳng cột với nhau","Ở đầu dòng","Không cần viết","Đặt tùy ý"],answer:0,why:"Đặt các dấu phẩy thẳng cột để cộng các hàng tương ứng."},
+      {q:"3,6 + 1,4 bằng bao nhiêu?",options:["4","5","4,10","5,1"],answer:1,why:"3,6 + 1,4 = 5,0 = 5."},
+      {q:"Sau khi tính, cách nào giúp kiểm tra kết quả?",options:["Đoán lại","Dùng phép tính ngược hoặc ước lượng","Bỏ qua","Chỉ hỏi bạn"],answer:1,why:"Phép tính ngược hoặc ước lượng giúp kiểm tra tính hợp lý."}
+    ];
   } else if (subject === "math" && /đường tròn|hình tròn|hình chữ nhật|hình vuông|chu vi|diện tích/i.test(topic)) {
     kind = "geometry";
     explanation = "Quan sát hình, nhận biết các yếu tố hình học và liên hệ chúng với yêu cầu bài học.";
@@ -193,7 +285,7 @@ async function generate(input) {
   const topic = String(input.topic || "").slice(0,160);
   const subject = String(input.subject || "general");
   const grade = String(input.grade || "5");
-  const prompt = `Bạn là chuyên gia thiết kế mô phỏng dạy học tiểu học Việt Nam. Tạo kịch bản mô phỏng ngắn, đúng lứa tuổi, về chủ đề: ${topic}. Môn: ${subject}; lớp: ${grade}. Trả về CHỈ JSON hợp lệ theo schema {"title":string,"subject":string,"grade":string,"kind":"trapezoid"|"sentence"|"water"|"decimal"|"fraction"|"geometry"|"plant"|"magnet"|"solar"|"cube"|"cuboid"|"triangle"|"rectangle"|"square"|"parallelogram"|"explore","explanation":string,"steps":[{"title":string,"text":string}],"questions":[{"q":string,"options":[string,string,string,string],"answer":number,"why":string}]}. Có 3 bước và 3 câu hỏi, đáp án answer là chỉ số 0-3. Không bịa nội dung sách cụ thể.`;
+  const prompt = `Bạn là chuyên gia thiết kế mô phỏng dạy học tiểu học Việt Nam. Tạo kịch bản mô phỏng ngắn, đúng lứa tuổi, về chủ đề: ${topic}. Môn: ${subject}; lớp: ${grade}. Trả về CHỈ JSON hợp lệ theo schema {"title":string,"subject":string,"grade":string,"kind":"trapezoid"|"sentence"|"water"|"decimal"|"fraction"|"geometry"|"plant"|"magnet"|"solar"|"cube"|"cuboid"|"triangle"|"rectangle"|"square"|"parallelogram"|"circle"|"percent"|"volume"|"units"|"ratio"|"arithmetic"|"explore","explanation":string,"steps":[{"title":string,"text":string}],"questions":[{"q":string,"options":[string,string,string,string],"answer":number,"why":string}]}. Có 3 bước và 3 câu hỏi, đáp án answer là chỉ số 0-3. Không bịa nội dung sách cụ thể.`;
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method:"POST",
     headers:{"Authorization":`Bearer ${key}`,"Content-Type":"application/json"},
@@ -213,6 +305,12 @@ async function generate(input) {
   else if (/hình chữ nhật/.test(topicKey)) plan.kind = "rectangle";
   else if (/hình vuông/.test(topicKey)) plan.kind = "square";
   else if (/hình bình hành/.test(topicKey)) plan.kind = "parallelogram";
+  else if (/đường tròn|hình tròn|chu vi hình tròn|diện tích hình tròn/.test(topicKey)) plan.kind = "circle";
+  else if (/tỉ số phần trăm|tỉ số|phần trăm|giá trị phần trăm/.test(topicKey)) plan.kind = "percent";
+  else if (/thể tích|xăng-ti-mét khối|đề-xi-mét khối|mét khối/.test(topicKey)) plan.kind = "volume";
+  else if (/đơn vị đo diện tích|ki-lô-mét vuông|héc-ta|đo lường|đổi đơn vị/.test(topicKey)) plan.kind = "units";
+  else if (/tỉ lệ bản đồ|bản đồ|tìm hai số khi biết tổng|tìm hai số khi biết hiệu/.test(topicKey)) plan.kind = "ratio";
+  else if (/số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân/.test(topicKey)) plan.kind = /thập phân/.test(topicKey) ? "decimal" : "arithmetic";
   else if (/số thập phân|hàng thập phân|phần mười|phần trăm/.test(topicKey)) plan.kind = "decimal";
   else if (/phân số|tử số|mẫu số|quy đồng/.test(topicKey)) plan.kind = "fraction";
   else if (/chủ ngữ|vị ngữ|trạng ngữ|từ đồng nghĩa|nhân hóa|câu ghép/.test(topicKey) || subject === "vietnamese") plan.kind = "sentence";
