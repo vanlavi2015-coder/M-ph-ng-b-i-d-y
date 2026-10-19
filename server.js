@@ -76,7 +76,7 @@ function fallbackPlan(input) {
       {q:"Thể tích hình hộp chữ nhật được tính bằng cách nào?",options:["Dài + rộng + cao","Dài × rộng × cao","Dài × rộng","(Dài + rộng) × 2"],answer:1,why:"Thể tích bằng chiều dài nhân chiều rộng nhân chiều cao."},
       {q:"Các mặt đối diện của hình hộp chữ nhật như thế nào?",options:["Luôn là hình tròn","Không liên quan nhau","Bằng nhau","Đều là hình vuông"],answer:2,why:"Mỗi cặp mặt đối diện của hình hộp chữ nhật bằng nhau."}
     ];
-  } else if (subject === "math" && /số thập phân|hàng thập phân|phần mười|phần trăm/i.test(topic)) {
+  } else if (subject === "math" && /số thập phân|hàng thập phân|phần mười|làm tròn số thập phân|so sánh các số thập phân/i.test(topic)) {
     kind = "decimal";
     explanation = "Quan sát giá trị các chữ số theo hàng và thử thay đổi số để thấy giá trị thay đổi.";
     steps = [
@@ -213,11 +213,37 @@ function fallbackPlan(input) {
       {title:"Thực hiện",text:"Làm từng bước, chú ý giá trị hàng và dấu phẩy thập phân nếu có."},
       {title:"Kiểm tra",text:"Ước lượng hoặc dùng phép tính ngược để kiểm tra kết quả."}
     ];
-    questions = [
-      {q:"Khi cộng các số thập phân, dấu phẩy cần được đặt thế nào?",options:["Thẳng cột với nhau","Ở đầu dòng","Không cần viết","Đặt tùy ý"],answer:0,why:"Đặt các dấu phẩy thẳng cột để cộng các hàng tương ứng."},
-      {q:"3,6 + 1,4 bằng bao nhiêu?",options:["4","5","4,10","5,1"],answer:1,why:"3,6 + 1,4 = 5,0 = 5."},
-      {q:"Sau khi tính, cách nào giúp kiểm tra kết quả?",options:["Đoán lại","Dùng phép tính ngược hoặc ước lượng","Bỏ qua","Chỉ hỏi bạn"],answer:1,why:"Phép tính ngược hoặc ước lượng giúp kiểm tra tính hợp lý."}
-    ];
+    if (/phép trừ|trừ số|hiệu/i.test(topic)) {
+      questions = [
+        {q:"Tính 52 − 28.",options:["24","34","30","26"],answer:0,why:"52 − 28 = 24."},
+        {q:"Phép trừ có thể kiểm tra bằng phép tính nào?",options:["Cộng","Chia","Nhân đôi","Không thể kiểm tra"],answer:0,why:"Lấy hiệu cộng với số trừ sẽ được số bị trừ."},
+        {q:"Tính 8,2 − 3,7.",options:["4,5","5,5","4,7","11,9"],answer:0,why:"8,2 − 3,7 = 4,5; cần đặt dấu phẩy thẳng cột."}
+      ];
+    } else if (/phép nhân|nhân số|tích/i.test(topic)) {
+      questions = [
+        {q:"Tính 24 × 3.",options:["62","72","82","27"],answer:1,why:"24 × 3 = 72."},
+        {q:"Nhân một số với 10 thì giá trị số thay đổi thế nào?",options:["Gấp 10 lần","Giảm 10 lần","Không đổi","Luôn bằng 10"],answer:0,why:"Nhân với 10 làm giá trị số gấp 10 lần."},
+        {q:"Tính 2,4 × 3.",options:["0,72","7,2","72","5,4"],answer:1,why:"2,4 × 3 = 7,2."}
+      ];
+    } else if (/phép chia|chia số|thương/i.test(topic)) {
+      questions = [
+        {q:"Tính 84 ÷ 4.",options:["20","21","24","18"],answer:1,why:"84 ÷ 4 = 21."},
+        {q:"Phép chia có thể kiểm tra bằng cách nào?",options:["Cộng số chia","Nhân thương với số chia","Trừ 1","Không thể kiểm tra"],answer:1,why:"Thương nhân số chia bằng số bị chia nếu phép chia hết."},
+        {q:"Tính 7,2 ÷ 3.",options:["2,4","24","4,2","0,24"],answer:0,why:"7,2 ÷ 3 = 2,4."}
+      ];
+    } else if (/phép cộng|cộng số|tổng/i.test(topic)) {
+      questions = [
+        {q:"Tính 248 + 175.",options:["413","423","433","323"],answer:1,why:"248 + 175 = 423."},
+        {q:"Khi cộng số thập phân, cần đặt thế nào?",options:["Dấu phẩy thẳng cột","Các chữ số tùy ý","Bỏ dấu phẩy","Viết ngược số"],answer:0,why:"Đặt các dấu phẩy thẳng cột để cộng các hàng tương ứng."},
+        {q:"Tính 3,6 + 1,4.",options:["4","5","4,10","5,1"],answer:1,why:"3,6 + 1,4 = 5,0 = 5."}
+      ];
+    } else {
+      questions = [
+        {q:"Tính 3,6 + 1,4.",options:["4","5","4,10","5,1"],answer:1,why:"3,6 + 1,4 = 5,0 = 5."},
+        {q:"Khi thực hiện phép tính, điều gì cần chú ý?",options:["Đọc đúng dấu và dữ kiện","Bỏ qua dấu phép tính","Đoán kết quả","Không cần kiểm tra"],answer:0,why:"Đọc đúng dấu phép tính giúp chọn cách tính chính xác."},
+        {q:"Sau khi tính, cách nào giúp kiểm tra kết quả?",options:["Đoán lại","Dùng phép tính ngược hoặc ước lượng","Bỏ qua","Chỉ hỏi bạn"],answer:1,why:"Phép tính ngược hoặc ước lượng giúp kiểm tra tính hợp lý."}
+      ];
+    }
   } else if (subject === "math" && /đường tròn|hình tròn|chu vi hình tròn|diện tích hình tròn/i.test(topic)) {
     kind = "circle";
     const area = /diện tích/.test(topic);
@@ -331,8 +357,8 @@ async function generate(input) {
   else if (/thể tích|xăng-ti-mét khối|đề-xi-mét khối|mét khối/.test(topicKey)) plan.kind = "volume";
   else if (/đơn vị đo diện tích|ki-lô-mét vuông|héc-ta|đo lường|đổi đơn vị/.test(topicKey)) plan.kind = "units";
   else if (/tỉ lệ bản đồ|bản đồ|tìm hai số khi biết tổng|tìm hai số khi biết hiệu/.test(topicKey)) plan.kind = "ratio";
-  else if (/số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân|phép cộng|phép trừ|phép nhân|phép chia|cộng trừ|nhân chia|tính nhẩm|tính giá trị biểu thức|thứ tự thực hiện phép tính|ước lượng kết quả|tính toán/.test(topicKey)) plan.kind = /thập phân/.test(topicKey) ? "decimal" : "arithmetic";
-  else if (/số thập phân|hàng thập phân|phần mười|phần trăm/.test(topicKey)) plan.kind = "decimal";
+  else if (/số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân|phép cộng|phép trừ|phép nhân|phép chia|cộng trừ|nhân chia|tính nhẩm|tính giá trị biểu thức|thứ tự thực hiện phép tính|ước lượng kết quả|tính toán/.test(topicKey) && !/phân số|tử số|mẫu số|quy đồng|phần trăm|tỉ số/.test(topicKey)) plan.kind = /thập phân/.test(topicKey) ? "decimal" : "arithmetic";
+  else if (/số thập phân|hàng thập phân|phần mười|làm tròn số thập phân|so sánh các số thập phân/.test(topicKey)) plan.kind = "decimal";
   else if (/phân số|tử số|mẫu số|quy đồng/.test(topicKey)) plan.kind = "fraction";
   else if (/chủ ngữ|vị ngữ|trạng ngữ|từ đồng nghĩa|nhân hóa|câu ghép/.test(topicKey) || subject === "vietnamese") plan.kind = "sentence";
   else if (/vòng tuần hoàn nước|bay hơi|ngưng tụ|mưa|nước trong tự nhiên/.test(topicKey)) plan.kind = "water";
