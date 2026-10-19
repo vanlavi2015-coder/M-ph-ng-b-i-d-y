@@ -148,6 +148,19 @@ function addAreaVideo(plan){
 }
 
 const SLIDER_GEOMETRY = new Set(["triangle","cube","cuboid","rectangle","square","parallelogram","circle","geometry","volume"]);
+const SLIDER_ARITHMETIC = new Set(["arithmetic"]);
+function arithmeticInteractiveHtml(plan){
+ const topic=String(plan.title||"")+" "+String(plan.explanation||"");
+ const op=/phép trừ|trừ số|hiệu/i.test(topic)?"−":/phép nhân|nhân số|tích/i.test(topic)?"×":/phép chia|chia số|thương/i.test(topic)?"÷":"+";
+ return '<div class="sim-layout"><div class="svgwrap" id="arithDrawing" aria-live="polite"></div><div class="controls"><strong>Thao tác với số</strong><label for="arithA" style="margin-top:10px">Số thứ nhất: <span id="arithAVal">24</span></label><input id="arithA" type="range" min="0" max="100" value="24"><label for="arithOp" style="margin-top:10px">Phép tính</label><select id="arithOp"><option value="+">Cộng (+)</option><option value="−">Trừ (−)</option><option value="×">Nhân (×)</option><option value="÷">Chia (÷)</option></select><label for="arithB" style="margin-top:10px">Số thứ hai: <span id="arithBVal">16</span></label><input id="arithB" type="range" min="1" max="100" value="16"><div class="readout">Kết quả: <span id="arithResult">40</span></div><p class="note">Kéo thanh trượt hoặc đổi phép tính để khám phá kết quả.</p></div></div>';
+}
+function updateArithmetic(){
+ const a=+$("arithA").value,b=+$("arithB").value,op=$("arithOp").value;
+ let value;if(op==="+")value=a+b;else if(op==="−")value=a-b;else if(op==="×")value=a*b;else value=a/b;
+ const shown=Number.isFinite(value)?Number(value.toFixed(4)).toLocaleString("vi-VN"):"Không xác định";
+ $("arithAVal").textContent=a;$("arithBVal").textContent=b;$("arithResult").textContent=shown;
+ $("arithDrawing").innerHTML='<svg viewBox="0 0 500 230" width="100%" role="img" aria-label="Mô hình phép tính"><text x="250" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#17324d">Cùng khám phá phép tính</text><rect x="45" y="65" width="125" height="70" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="107" y="108" text-anchor="middle" font-size="28" font-weight="700" fill="#1d4ed8">'+a+'</text><text x="205" y="108" text-anchor="middle" font-size="30" font-weight="700" fill="#17324d">'+op+'</text><rect x="240" y="65" width="100" height="70" rx="12" fill="#dcfce7" stroke="#15803d" stroke-width="2"/><text x="290" y="108" text-anchor="middle" font-size="28" font-weight="700" fill="#166534">'+b+'</text><text x="370" y="108" text-anchor="middle" font-size="28" font-weight="700" fill="#17324d">=</text><rect x="400" y="65" width="65" height="70" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/><text x="432" y="108" text-anchor="middle" font-size="22" font-weight="700" fill="#92400e">'+shown+'</text><text x="250" y="180" text-anchor="middle" font-size="17" fill="#17324d">Thay đổi các số để quan sát kết quả</text><text x="250" y="207" text-anchor="middle" font-size="14" fill="#60758a">Kiểm tra bằng phép tính ngược hoặc ước lượng</text></svg>';
+}
 function geometryInteractiveHtml(plan){
  return '<div class="sim-layout"><div class="svgwrap" id="geoDrawing"></div><div class="controls"><strong>Thay đổi kích thước</strong><label for="geoA" style="margin-top:10px">Kích thước a / bán kính r: <span id="geoAVal">6</span></label><input id="geoA" type="range" min="2" max="10" value="6"><label for="geoB" style="margin-top:10px">Kích thước b: <span id="geoBVal">4</span></label><input id="geoB" type="range" min="2" max="10" value="4"><label for="geoH" style="margin-top:10px">Chiều cao h: <span id="geoHVal">5</span></label><input id="geoH" type="range" min="2" max="10" value="5"><div class="readout">Kết quả: <span id="geoMeasure">—</span></div><p class="note">Kéo thanh trượt để xem hình và kết quả thay đổi.</p></div></div>';
 }
@@ -189,7 +202,9 @@ function render(plan){
  const steps=(plan.steps||[]).slice(0,3);
  const questions=(plan.questions||[]).slice(0,6);
  let sim="";
- if(plan.kind==="trapezoid"){
+ if(plan.kind==="arithmetic"){
+  sim=arithmeticInteractiveHtml(plan);
+ } else if(plan.kind==="trapezoid"){
   sim=`<div class="sim-layout"><div class="svgwrap" id="trapDrawing">${trapezoidSvg(12,8,5)}</div><div class="controls"><label for="baseA">Đáy lớn a: <span id="aVal">12</span> cm</label><input id="baseA" type="range" min="6" max="16" value="12"><label for="baseB" style="margin-top:12px">Đáy bé b: <span id="bVal">8</span> cm</label><input id="baseB" type="range" min="3" max="10" value="8"><label for="height" style="margin-top:12px">Chiều cao h: <span id="hVal">5</span> cm</label><input id="height" type="range" min="2" max="10" value="5"><div class="readout">Diện tích: <span id="areaVal">50</span> cm²</div><p class="note">Kéo thanh trượt để thử các trường hợp khác nhau.</p></div></div>`;
  } else if(SLIDER_GEOMETRY.has(plan.kind)){
   sim=geometryInteractiveHtml(plan);
@@ -199,6 +214,7 @@ function render(plan){
  $("result").innerHTML=`<div class="simhead"><div><h2>${esc(plan.title)}</h2><p class="note">Môn ${esc(plan.subject)} · Lớp ${esc(plan.grade)}</p></div><span class="tag">MÔ PHỎNG</span></div><div class="canvas">${sim}<div id="areaVideoMount"></div><div class="explain"><strong>💡 Kiến thức trọng tâm</strong><div>${esc(plan.explanation)}</div></div><div class="steps">${steps.map((s,i)=>`<div class="step ${i===0?'active':''}"><strong>${i+1}. ${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join("")}</div></div><div class="quiz"><div class="topline"><h2>🧠 Kiểm tra nhanh</h2><span class="tag">Điểm: <span id="score">0</span>/${questions.length*10}</span></div><p class="note">Chọn một đáp án cho mỗi câu. Mỗi câu đúng được 10 điểm.</p>${questions.map((q,i)=>`<div class="qcard" id="qcard${i}"><h3>Câu ${i+1}. ${esc(q.q)}</h3><div class="opts">${q.options.map((o,j)=>`<button class="opt" data-q="${i}" data-a="${j}">${"ABCD"[j]}. ${esc(o)}</button>`).join("")}</div><div class="feedback" id="feedback${i}"></div></div>`).join("")}</div><div class="actions"><button class="btn secondary" id="restart">↻ Làm lại câu hỏi</button><button class="btn light" id="copyPlan">Sao chép kịch bản</button></div>`;
  {const mount=$("areaVideoMount");if(mount)mount.appendChild(addAreaVideo(plan));}
  if(plan.kind==="trapezoid") ["baseA","baseB","height"].forEach(id=>$(id).addEventListener("input",updateTrap));
+ else if(SLIDER_ARITHMETIC.has(plan.kind)){ $("arithOp").value=/phép trừ|trừ số|hiệu/i.test(plan.title)?"−":/phép nhân|nhân số|tích/i.test(plan.title)?"×":/phép chia|chia số|thương/i.test(plan.title)?"÷":"+"; ["arithA","arithB","arithOp"].forEach(id=>$(id).addEventListener("input",updateArithmetic)); updateArithmetic(); }
  else if(SLIDER_GEOMETRY.has(plan.kind)) { ["geoA","geoB","geoH"].forEach(id=>$(id).addEventListener("input",()=>updateGeometry(plan))); updateGeometry(plan); }
  else $("showExplain").addEventListener("click",()=>{$("hint").textContent=plan.steps.map((s,i)=>`${i+1}. ${s.title}: ${s.text}`).join(" ");});
  $("result").querySelectorAll(".opt").forEach(btn=>btn.addEventListener("click",()=>answer(btn,questions)));
