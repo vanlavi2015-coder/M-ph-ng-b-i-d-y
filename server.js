@@ -407,6 +407,7 @@ async function generate(input) {
   else if (/nam châm|từ tính|lực hút/.test(topicKey)) plan.kind = "magnet";
   else if (/mặt trời|hệ mặt trời|hành tinh|trái đất|ngày và đêm/.test(topicKey)) plan.kind = "solar";
   else if (/đường tròn|hình tròn|tam giác|hình chữ nhật|hình vuông|chu vi|diện tích/.test(topicKey)) plan.kind = "geometry";
+  plan.topic = topic;
   plan.source = "ai";
   return plan;
 }
