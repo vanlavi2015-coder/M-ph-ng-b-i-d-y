@@ -102,7 +102,31 @@ function fallbackPlan(input) {
       {q:"Trong phân số 2/5, mẫu số là số nào?",options:["2","5","7","10"],answer:1,why:"Mẫu số là số ở dưới gạch phân số."},
       {q:"Phân số nào lớn hơn trong hai phân số 1/4 và 3/4?",options:["1/4","3/4","Bằng nhau","Không thể so sánh"],answer:1,why:"Hai phân số cùng mẫu số, phân số có tử số lớn hơn thì lớn hơn."}
     ];
-  } else if (subject === "math" && /đường tròn|hình tròn|tam giác|hình chữ nhật|hình vuông|chu vi|diện tích/i.test(topic)) {
+  } else if (subject === "math" && /hình tam giác|tam giác|diện tích tam giác/i.test(topic)) {
+    const areaLesson = /diện tích/.test(topic);
+    kind = "triangle";
+    explanation = areaLesson
+      ? "Diện tích hình tam giác bằng độ dài đáy nhân với chiều cao tương ứng rồi chia cho 2: S = a × h ÷ 2. Đáy và chiều cao phải cùng đơn vị đo."
+      : "Hình tam giác có 3 cạnh, 3 đỉnh, 3 góc. Các dạng thường gặp: tam giác nhọn, tam giác vuông, tam giác tù và tam giác đều. Đường cao kẻ từ một đỉnh và vuông góc với đáy tương ứng.";
+    steps = areaLesson ? [
+      {title:"Ôn lại",text:"Xác định đáy a và chiều cao h tương ứng; đường cao phải vuông góc với đáy."},
+      {title:"Khám phá",text:"Ghép hai hình tam giác bằng nhau để tạo thành hình bình hành có đáy a và chiều cao h; diện tích hình ghép gấp đôi diện tích một tam giác."},
+      {title:"Rút ra công thức",text:"S hình tam giác = (a × h) ÷ 2. Đổi đáy và chiều cao về cùng đơn vị trước khi tính."}
+    ] : [
+      {title:"Quan sát",text:"Nhận biết 3 cạnh, 3 đỉnh và 3 góc của hình tam giác."},
+      {title:"Phân loại",text:"So sánh góc và cạnh để nhận biết tam giác nhọn, vuông, tù và tam giác đều."},
+      {title:"Xác định đường cao",text:"Chỉ ra đáy, đường cao vuông góc với đáy và chiều cao tương ứng."}
+    ];
+    questions = areaLesson ? [
+      {q:"Tam giác có đáy 4 cm và chiều cao tương ứng 3 cm. Diện tích là bao nhiêu?",options:["12 cm²","6 cm²","7 cm²","24 cm²"],answer:1,why:"S = 4 × 3 ÷ 2 = 6 cm²."},
+      {q:"Đáy là 2 dm, chiều cao là 20 cm. Em cần làm gì trước khi tính?",options:["Cộng hai số đo","Đổi về cùng đơn vị đo","Nhân rồi cộng 2","Không cần kiểm tra đơn vị"],answer:1,why:"Đổi 2 dm = 20 cm, sau đó S = 20 × 20 ÷ 2 = 200 cm² = 2 dm²."},
+      {q:"Công thức tính diện tích hình tam giác là gì?",options:["S = a × h","S = (a + h) × 2","S = a × h ÷ 2","S = a + h ÷ 2"],answer:2,why:"Diện tích hình tam giác bằng đáy nhân chiều cao tương ứng rồi chia 2."}
+    ] : [
+      {q:"Hình tam giác có bao nhiêu cạnh, đỉnh và góc?",options:["2 cạnh, 3 đỉnh, 3 góc","3 cạnh, 3 đỉnh, 3 góc","4 cạnh, 4 đỉnh, 4 góc","3 cạnh, 2 đỉnh, 3 góc"],answer:1,why:"Mọi hình tam giác đều có 3 cạnh, 3 đỉnh và 3 góc."},
+      {q:"Đường cao ứng với một đáy của tam giác phải như thế nào?",options:["Song song với đáy","Bằng đáy","Vuông góc với đáy","Luôn nằm ngoài tam giác"],answer:2,why:"Đường cao là đoạn thẳng kẻ từ một đỉnh và vuông góc với đáy tương ứng."},
+      {q:"Tam giác có một góc vuông gọi là gì?",options:["Tam giác nhọn","Tam giác tù","Tam giác đều","Tam giác vuông"],answer:3,why:"Tam giác có một góc vuông là tam giác vuông."}
+    ];
+  } else if (subject === "math" && /đường tròn|hình tròn|hình chữ nhật|hình vuông|chu vi|diện tích/i.test(topic)) {
     kind = "geometry";
     explanation = "Quan sát hình, nhận biết các yếu tố hình học và liên hệ chúng với yêu cầu bài học.";
     steps = [
