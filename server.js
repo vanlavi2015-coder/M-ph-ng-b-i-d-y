@@ -416,7 +416,14 @@ const server = http.createServer(async (req,res) => {
     try {
       const input = await readBody(req);
       if (!String(input.topic || "").trim()) return send(res,400,JSON.stringify({error:"Cô hãy nhập tên bài học hoặc nội dung cần mô phỏng."}));
-      const plan = await generate(input);
+      let plan;
+      try {
+        plan = await generate(input);
+      } catch (aiError) {
+        plan = fallbackPlan(input);
+        plan.source = "demo";
+        plan.notice = "Chưa tạo được bằng AI; website đã tự chuyển sang mô phỏng mẫu để cô vẫn tiếp tục sử dụng.";
+      }
       return send(res,200,JSON.stringify(plan));
     } catch (e) { return send(res,500,JSON.stringify({error:e.message || "Có lỗi khi tạo mô phỏng."})); }
   }
