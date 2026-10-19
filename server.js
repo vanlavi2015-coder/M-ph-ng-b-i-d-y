@@ -412,7 +412,7 @@ async function generate(input) {
   return plan;
 }
 const server = http.createServer(async (req,res) => {
-  if (req.url === "/api/health") return send(res,200,JSON.stringify({ok:true,app:"Mo phong bai day"}));
+  if (req.url === "/api/health") return send(res,200,JSON.stringify({ok:true,app:"Mo phong bai day",version:"2026-10-19-v2"}));
   if (req.url === "/api/generate" && req.method === "POST") {
     try {
       const input = await readBody(req);
