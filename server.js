@@ -76,6 +76,31 @@ function fallbackPlan(input) {
       {q:"Thể tích hình hộp chữ nhật được tính bằng cách nào?",options:["Dài + rộng + cao","Dài × rộng × cao","Dài × rộng","(Dài + rộng) × 2"],answer:1,why:"Thể tích bằng chiều dài nhân chiều rộng nhân chiều cao."},
       {q:"Các mặt đối diện của hình hộp chữ nhật như thế nào?",options:["Luôn là hình tròn","Không liên quan nhau","Bằng nhau","Đều là hình vuông"],answer:2,why:"Mỗi cặp mặt đối diện của hình hộp chữ nhật bằng nhau."}
     ];
+  } else if (subject === "math" && /(?:cộng|trừ|nhân|chia|phép tính).{0,35}số thập phân|số thập phân.{0,35}(?:cộng|trừ|nhân|chia|phép tính)/i.test(topic)) {
+    kind = "arithmetic";
+    explanation = "Thực hiện phép tính với số thập phân, đặt các dấu phẩy thẳng cột khi cộng hoặc trừ và kiểm tra kết quả bằng ước lượng.";
+    steps = [
+      {title:"Đọc phép tính",text:"Xác định phép tính và các số thập phân đã cho."},
+      {title:"Thực hiện",text:"Chú ý giá trị các hàng và dấu phẩy thập phân; với phép chia, kiểm tra số chia khác 0."},
+      {title:"Kiểm tra",text:"Ước lượng hoặc dùng phép tính ngược để kiểm tra kết quả."}
+    ];
+    questions = /trừ/i.test(topic) ? [
+      {q:"Tính 8,2 − 3,7.",options:["4,5","5,5","4,7","11,9"],answer:0,why:"8,2 − 3,7 = 4,5."},
+      {q:"Khi trừ hai số thập phân, cần đặt thế nào?",options:["Dấu phẩy thẳng cột","Dấu phẩy tùy ý","Bỏ dấu phẩy","Viết ngược số"],answer:0,why:"Đặt các dấu phẩy thẳng cột để các hàng tương ứng thẳng nhau."},
+      {q:"Tính 5,0 − 1,6.",options:["3,4","4,4","3,6","6,6"],answer:0,why:"5,0 − 1,6 = 3,4."}
+    ] : /nhân/i.test(topic) ? [
+      {q:"Tính 2,4 × 3.",options:["0,72","7,2","72","5,4"],answer:1,why:"2,4 × 3 = 7,2."},
+      {q:"Tính 0,5 × 8.",options:["4","0,4","40","8,5"],answer:0,why:"0,5 × 8 = 4."},
+      {q:"Sau khi nhân số thập phân, cần làm gì?",options:["Kiểm tra vị trí dấu phẩy","Bỏ dấu phẩy","Đổi phép nhân thành cộng","Không cần kiểm tra"],answer:0,why:"Cần kiểm tra giá trị hàng và vị trí dấu phẩy."}
+    ] : /chia/i.test(topic) ? [
+      {q:"Tính 7,2 ÷ 3.",options:["2,4","24","4,2","0,24"],answer:0,why:"7,2 ÷ 3 = 2,4."},
+      {q:"Tính 4,8 ÷ 2.",options:["2,4","24","2,8","0,24"],answer:0,why:"4,8 ÷ 2 = 2,4."},
+      {q:"Số chia trong phép chia phải khác số nào?",options:["0","1","2","10"],answer:0,why:"Không thể thực hiện phép chia cho 0."}
+    ] : [
+      {q:"Tính 3,6 + 1,4.",options:["4","5","4,10","5,1"],answer:1,why:"3,6 + 1,4 = 5,0 = 5."},
+      {q:"Khi cộng số thập phân, cần đặt thế nào?",options:["Dấu phẩy thẳng cột","Các chữ số tùy ý","Bỏ dấu phẩy","Viết ngược số"],answer:0,why:"Đặt dấu phẩy thẳng cột để cộng các hàng tương ứng."},
+      {q:"Tính 2,35 + 1,4.",options:["3,75","2,49","3,39","3,65"],answer:0,why:"2,35 + 1,40 = 3,75."}
+    ];
   } else if (subject === "math" && /số thập phân|hàng thập phân|phần mười|làm tròn số thập phân|so sánh các số thập phân/i.test(topic)) {
     kind = "decimal";
     explanation = "Quan sát giá trị các chữ số theo hàng và thử thay đổi số để thấy giá trị thay đổi.";
@@ -187,10 +212,25 @@ function fallbackPlan(input) {
       {title:"Thực hiện",text:"Dùng bảng đơn vị hoặc quan hệ quy đổi để đổi số đo."},
       {title:"Kiểm tra",text:"Ước lượng kết quả và ghi đúng đơn vị."}
     ];
-    questions = [
+    const areaUnits = /diện tích|héc-ta|ki-lô-mét vuông|km²|m²/i.test(topic);
+    const massUnits = /khối lượng|ki-lô-gam|gam|tấn|yến|tạ/i.test(topic);
+    const timeUnits = /thời gian|giờ|phút|giây|ngày|tháng|năm/i.test(topic);
+    questions = areaUnits ? [
       {q:"1 ha bằng bao nhiêu m²?",options:["100 m²","1000 m²","10 000 m²","100 000 m²"],answer:2,why:"1 ha = 10 000 m²."},
       {q:"1 km² bằng bao nhiêu ha?",options:["10 ha","100 ha","1000 ha","10 000 ha"],answer:1,why:"1 km² = 100 ha."},
-      {q:"Khi đổi đơn vị diện tích liền kề, mỗi bậc thường gấp hoặc kém bao nhiêu lần?",options:["2 lần","5 lần","10 lần","100 lần"],answer:3,why:"Các đơn vị diện tích liền kề hơn kém nhau 100 lần."}
+      {q:"Các đơn vị diện tích liền kề hơn kém nhau bao nhiêu lần?",options:["2 lần","10 lần","100 lần","1000 lần"],answer:2,why:"Các đơn vị diện tích liền kề hơn kém nhau 100 lần."}
+    ] : massUnits ? [
+      {q:"1 kg bằng bao nhiêu gam?",options:["10 g","100 g","1000 g","10 000 g"],answer:2,why:"1 kg = 1000 g."},
+      {q:"3,5 kg bằng bao nhiêu gam?",options:["350 g","3500 g","35 000 g","3050 g"],answer:1,why:"3,5 kg = 3500 g."},
+      {q:"2 tấn bằng bao nhiêu kg?",options:["200 kg","2000 kg","20 000 kg","20 kg"],answer:1,why:"1 tấn = 1000 kg, nên 2 tấn = 2000 kg."}
+    ] : timeUnits ? [
+      {q:"1 giờ bằng bao nhiêu phút?",options:["30 phút","60 phút","100 phút","24 phút"],answer:1,why:"1 giờ = 60 phút."},
+      {q:"2 giờ 30 phút bằng bao nhiêu phút?",options:["120 phút","130 phút","150 phút","230 phút"],answer:2,why:"2 × 60 + 30 = 150 phút."},
+      {q:"1 ngày có bao nhiêu giờ?",options:["12 giờ","24 giờ","60 giờ","100 giờ"],answer:1,why:"1 ngày = 24 giờ."}
+    ] : [
+      {q:"1 m bằng bao nhiêu cm?",options:["10 cm","100 cm","1000 cm","10 000 cm"],answer:1,why:"1 m = 100 cm."},
+      {q:"2,5 m bằng bao nhiêu cm?",options:["25 cm","250 cm","2500 cm","205 cm"],answer:1,why:"2,5 × 100 = 250 cm."},
+      {q:"Các đơn vị độ dài liền kề hơn kém nhau bao nhiêu lần?",options:["2 lần","5 lần","10 lần","100 lần"],answer:2,why:"Các đơn vị độ dài liền kề hơn kém nhau 10 lần."}
     ];
   } else if (subject === "math" && /tỉ lệ bản đồ|bản đồ|tìm hai số khi biết tổng|tìm hai số khi biết hiệu/i.test(topic)) {
     kind = "ratio";
@@ -357,6 +397,7 @@ async function generate(input) {
   else if (/thể tích|xăng-ti-mét khối|đề-xi-mét khối|mét khối/.test(topicKey)) plan.kind = "volume";
   else if (/đơn vị đo diện tích|ki-lô-mét vuông|héc-ta|đo lường|đổi đơn vị/.test(topicKey)) plan.kind = "units";
   else if (/tỉ lệ bản đồ|bản đồ|tìm hai số khi biết tổng|tìm hai số khi biết hiệu/.test(topicKey)) plan.kind = "ratio";
+  else if (/(?:cộng|trừ|nhân|chia|phép tính).{0,35}số thập phân|số thập phân.{0,35}(?:cộng|trừ|nhân|chia|phép tính)/.test(topicKey)) plan.kind = "arithmetic";
   else if (/số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân|phép cộng|phép trừ|phép nhân|phép chia|cộng trừ|nhân chia|tính nhẩm|tính giá trị biểu thức|thứ tự thực hiện phép tính|ước lượng kết quả|tính toán/.test(topicKey) && !/phân số|tử số|mẫu số|quy đồng|phần trăm|tỉ số/.test(topicKey)) plan.kind = /thập phân/.test(topicKey) ? "decimal" : "arithmetic";
   else if (/số thập phân|hàng thập phân|phần mười|làm tròn số thập phân|so sánh các số thập phân/.test(topicKey)) plan.kind = "decimal";
   else if (/phân số|tử số|mẫu số|quy đồng/.test(topicKey)) plan.kind = "fraction";
