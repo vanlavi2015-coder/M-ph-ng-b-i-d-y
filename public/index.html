@@ -150,7 +150,7 @@ function addAreaVideo(plan){
 const SLIDER_GEOMETRY = new Set(["triangle","cube","cuboid","rectangle","square","parallelogram","circle","geometry","volume"]);
 const SLIDER_ARITHMETIC = new Set(["arithmetic"]);
 function arithmeticInteractiveHtml(plan){
- const topic=String(plan.title||"")+" "+String(plan.explanation||"");
+ const topic=String(plan.topic||plan.title||"")+" "+String(plan.explanation||"");
  const decimalMode=/số thập phân/i.test(topic)&&/(cộng|trừ|nhân|chia|phép tính)/i.test(topic);
  const op=/trừ|hiệu/i.test(topic)?"−":/nhân|tích/i.test(topic)?"×":/chia|thương/i.test(topic)?"÷":"+";
  const defaults=decimalMode?(op==="−"?[8.2,3.7]:op==="×"?[2.4,3]:op==="÷"?[7.2,3]:[3.6,1.4]):[24,16];
@@ -218,7 +218,7 @@ function render(plan){
  $("result").innerHTML=`<div class="simhead"><div><h2>${esc(plan.title)}</h2><p class="note">Môn ${esc(plan.subject)} · Lớp ${esc(plan.grade)}</p></div><span class="tag">MÔ PHỎNG</span></div><div class="canvas">${sim}<div id="areaVideoMount"></div><div class="explain"><strong>💡 Kiến thức trọng tâm</strong><div>${esc(plan.explanation)}</div></div><div class="steps">${steps.map((s,i)=>`<div class="step ${i===0?'active':''}"><strong>${i+1}. ${esc(s.title)}</strong><span>${esc(s.text)}</span></div>`).join("")}</div></div><div class="quiz"><div class="topline"><h2>🧠 Kiểm tra nhanh</h2><span class="tag">Điểm: <span id="score">0</span>/${questions.length*10}</span></div><p class="note">Chọn một đáp án cho mỗi câu. Mỗi câu đúng được 10 điểm.</p>${questions.map((q,i)=>`<div class="qcard" id="qcard${i}"><h3>Câu ${i+1}. ${esc(q.q)}</h3><div class="opts">${q.options.map((o,j)=>`<button class="opt" data-q="${i}" data-a="${j}">${"ABCD"[j]}. ${esc(o)}</button>`).join("")}</div><div class="feedback" id="feedback${i}"></div></div>`).join("")}</div><div class="actions"><button class="btn secondary" id="restart">↻ Làm lại câu hỏi</button><button class="btn light" id="copyPlan">Sao chép kịch bản</button></div>`;
  {const mount=$("areaVideoMount");if(mount)mount.appendChild(addAreaVideo(plan));}
  if(plan.kind==="trapezoid") ["baseA","baseB","height"].forEach(id=>$(id).addEventListener("input",updateTrap));
- else if(SLIDER_ARITHMETIC.has(plan.kind)){ $("arithOp").value=/trừ|hiệu/i.test(plan.title)?"−":/nhân|tích/i.test(plan.title)?"×":/chia|thương/i.test(plan.title)?"÷":"+"; ["arithA","arithB","arithOp"].forEach(id=>$(id).addEventListener("input",updateArithmetic)); updateArithmetic(); }
+ else if(SLIDER_ARITHMETIC.has(plan.kind)){ const arithmeticTopic=String(plan.topic||plan.title||""); $("arithOp").value=/trừ|hiệu/i.test(arithmeticTopic)?"−":/nhân|tích/i.test(arithmeticTopic)?"×":/chia|thương/i.test(arithmeticTopic)?"÷":"+"; ["arithA","arithB","arithOp"].forEach(id=>$(id).addEventListener("input",updateArithmetic)); updateArithmetic(); }
  else if(SLIDER_GEOMETRY.has(plan.kind)) { ["geoA","geoB","geoH"].forEach(id=>$(id).addEventListener("input",()=>updateGeometry(plan))); updateGeometry(plan); }
  else $("showExplain").addEventListener("click",()=>{$("hint").textContent=plan.steps.map((s,i)=>`${i+1}. ${s.title}: ${s.text}`).join(" ");});
  $("result").querySelectorAll(".opt").forEach(btn=>btn.addEventListener("click",()=>answer(btn,questions)));
