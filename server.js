@@ -48,6 +48,34 @@ function fallbackPlan(input) {
       {q:"Nếu chiều cao tăng gấp đôi, hai đáy không đổi thì diện tích thế nào?",options:["Giảm một nửa","Không đổi","Tăng gấp đôi","Tăng gấp ba"],answer:2,why:"Diện tích tỉ lệ thuận với chiều cao khi hai đáy không đổi."},
       {q:"Công thức diện tích hình thang là gì?",options:["S = a × b","S = (a + b) × h ÷ 2","S = (a + b) × 2","S = a × h"],answer:1,why:"Lấy tổng hai đáy nhân chiều cao rồi chia 2."}
     ];
+  } else if (/hình lập phương|khối lập phương/i.test(topic)) {
+    kind = "cube";
+    const volume = /thể tích|the tich/i.test(topic);
+    explanation = volume ? "Thể tích hình lập phương bằng cạnh nhân với chính nó ba lần: V = a × a × a." : "Hình lập phương có 6 mặt là các hình vuông bằng nhau; các cạnh có độ dài bằng nhau.";
+    steps = [
+      {title:"Quan sát",text:"Nhận biết các mặt vuông, cạnh và đỉnh của hình lập phương."},
+      {title:"Khám phá",text:volume ? "Đếm số khối đơn vị theo chiều dài, chiều rộng và chiều cao." : "Quan sát mô hình và kiểm tra các mặt, cạnh có đặc điểm gì."},
+      {title:"Khái quát",text:volume ? "Tính thể tích bằng cạnh × cạnh × cạnh." : "Kết luận hình lập phương có 6 mặt vuông bằng nhau."}
+    ];
+    questions = [
+      {q:"Hình lập phương có bao nhiêu mặt?",options:["4 mặt","6 mặt","8 mặt","12 mặt"],answer:1,why:"Hình lập phương có 6 mặt, mỗi mặt là một hình vuông."},
+      {q:"Các cạnh của hình lập phương có đặc điểm gì?",options:["Đều bằng nhau","Có 2 cạnh bằng nhau","Chỉ có cạnh đáy bằng nhau","Không bằng nhau"],answer:0,why:"Tất cả các cạnh của hình lập phương có độ dài bằng nhau."},
+      {q:volume ? "Công thức tính thể tích hình lập phương là gì?" : "Mỗi mặt của hình lập phương có dạng gì?",options:volume ? ["V = a × a","V = a × a × a","V = 6 × a","V = a + a + a"] : ["Hình tam giác","Hình chữ nhật bất kỳ","Hình vuông","Hình tròn"],answer:volume ? 1 : 2,why:volume ? "Thể tích bằng cạnh nhân cạnh rồi nhân cạnh lần thứ ba." : "Mỗi mặt của hình lập phương là một hình vuông."}
+    ];
+  } else if (/hình hộp chữ nhật|khối hộp chữ nhật/i.test(topic)) {
+    kind = "cuboid";
+    const volume = /thể tích|the tich/i.test(topic);
+    explanation = volume ? "Thể tích hình hộp chữ nhật bằng chiều dài nhân chiều rộng rồi nhân chiều cao." : "Hình hộp chữ nhật có 6 mặt là hình chữ nhật; các mặt đối diện bằng nhau.";
+    steps = [
+      {title:"Quan sát",text:"Nhận biết chiều dài, chiều rộng và chiều cao của hình hộp chữ nhật."},
+      {title:"Khám phá",text:volume ? "Đếm các khối đơn vị xếp theo từng lớp." : "Quan sát 6 mặt và các cặp mặt đối diện."},
+      {title:"Khái quát",text:volume ? "V = dài × rộng × cao." : "Các mặt đối diện của hình hộp chữ nhật bằng nhau."}
+    ];
+    questions = [
+      {q:"Hình hộp chữ nhật có bao nhiêu mặt?",options:["4 mặt","5 mặt","6 mặt","8 mặt"],answer:2,why:"Hình hộp chữ nhật có 6 mặt."},
+      {q:"Thể tích hình hộp chữ nhật được tính bằng cách nào?",options:["Dài + rộng + cao","Dài × rộng × cao","Dài × rộng","(Dài + rộng) × 2"],answer:1,why:"Thể tích bằng chiều dài nhân chiều rộng nhân chiều cao."},
+      {q:"Các mặt đối diện của hình hộp chữ nhật như thế nào?",options:["Luôn là hình tròn","Không liên quan nhau","Bằng nhau","Đều là hình vuông"],answer:2,why:"Mỗi cặp mặt đối diện của hình hộp chữ nhật bằng nhau."}
+    ];
   } else if (subject === "math" && /số thập phân|hàng thập phân|phần mười|phần trăm/i.test(topic)) {
     kind = "decimal";
     explanation = "Quan sát giá trị các chữ số theo hàng và thử thay đổi số để thấy giá trị thay đổi.";
@@ -141,7 +169,7 @@ async function generate(input) {
   const topic = String(input.topic || "").slice(0,160);
   const subject = String(input.subject || "general");
   const grade = String(input.grade || "5");
-  const prompt = `Bạn là chuyên gia thiết kế mô phỏng dạy học tiểu học Việt Nam. Tạo kịch bản mô phỏng ngắn, đúng lứa tuổi, về chủ đề: ${topic}. Môn: ${subject}; lớp: ${grade}. Trả về CHỈ JSON hợp lệ theo schema {"title":string,"subject":string,"grade":string,"kind":"trapezoid"|"sentence"|"water"|"decimal"|"fraction"|"geometry"|"plant"|"magnet"|"solar"|"explore","explanation":string,"steps":[{"title":string,"text":string}],"questions":[{"q":string,"options":[string,string,string,string],"answer":number,"why":string}]}. Có 3 bước và 3 câu hỏi, đáp án answer là chỉ số 0-3. Không bịa nội dung sách cụ thể.`;
+  const prompt = `Bạn là chuyên gia thiết kế mô phỏng dạy học tiểu học Việt Nam. Tạo kịch bản mô phỏng ngắn, đúng lứa tuổi, về chủ đề: ${topic}. Môn: ${subject}; lớp: ${grade}. Trả về CHỈ JSON hợp lệ theo schema {"title":string,"subject":string,"grade":string,"kind":"trapezoid"|"sentence"|"water"|"decimal"|"fraction"|"geometry"|"plant"|"magnet"|"solar"|"cube"|"cuboid"|"triangle"|"rectangle"|"square"|"parallelogram"|"explore","explanation":string,"steps":[{"title":string,"text":string}],"questions":[{"q":string,"options":[string,string,string,string],"answer":number,"why":string}]}. Có 3 bước và 3 câu hỏi, đáp án answer là chỉ số 0-3. Không bịa nội dung sách cụ thể.`;
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method:"POST",
     headers:{"Authorization":`Bearer ${key}`,"Content-Type":"application/json"},
@@ -155,6 +183,12 @@ async function generate(input) {
   // Chọn loại hình minh họa theo chủ đề người dùng nhập, không phụ thuộc hoàn toàn vào dự đoán của AI.
   const topicKey = topic.toLocaleLowerCase("vi");
   if (/hình thang|diện tích hình thang/.test(topicKey)) plan.kind = "trapezoid";
+  else if (/hình lập phương|khối lập phương/.test(topicKey)) plan.kind = "cube";
+  else if (/hình hộp chữ nhật|khối hộp chữ nhật/.test(topicKey)) plan.kind = "cuboid";
+  else if (/tam giác/.test(topicKey)) plan.kind = "triangle";
+  else if (/hình chữ nhật/.test(topicKey)) plan.kind = "rectangle";
+  else if (/hình vuông/.test(topicKey)) plan.kind = "square";
+  else if (/hình bình hành/.test(topicKey)) plan.kind = "parallelogram";
   else if (/số thập phân|hàng thập phân|phần mười|phần trăm/.test(topicKey)) plan.kind = "decimal";
   else if (/phân số|tử số|mẫu số|quy đồng/.test(topicKey)) plan.kind = "fraction";
   else if (/chủ ngữ|vị ngữ|trạng ngữ|từ đồng nghĩa|nhân hóa|câu ghép/.test(topicKey) || subject === "vietnamese") plan.kind = "sentence";
