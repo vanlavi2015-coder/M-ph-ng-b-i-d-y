@@ -218,6 +218,23 @@ function fallbackPlan(input) {
       {q:"3,6 + 1,4 bằng bao nhiêu?",options:["4","5","4,10","5,1"],answer:1,why:"3,6 + 1,4 = 5,0 = 5."},
       {q:"Sau khi tính, cách nào giúp kiểm tra kết quả?",options:["Đoán lại","Dùng phép tính ngược hoặc ước lượng","Bỏ qua","Chỉ hỏi bạn"],answer:1,why:"Phép tính ngược hoặc ước lượng giúp kiểm tra tính hợp lý."}
     ];
+  } else if (subject === "math" && /đường tròn|hình tròn|chu vi hình tròn|diện tích hình tròn/i.test(topic)) {
+    kind = "circle";
+    const area = /diện tích/.test(topic);
+    explanation = area ? "Diện tích hình tròn bằng bán kính nhân bán kính rồi nhân 3,14." : "Chu vi hình tròn bằng đường kính nhân 3,14.";
+    steps = [{title:"Quan sát",text:"Xác định tâm, bán kính và đường kính."},{title:"Thao tác",text:"Kéo thanh trượt bán kính để quan sát hình tròn thay đổi."},{title:"Vận dụng",text:area ? "Tính S = r × r × 3,14." : "Tính C = d × 3,14."}];
+    questions = [{q:"Đường kính bằng bao nhiêu lần bán kính?",options:["1 lần","2 lần","3 lần","4 lần"],answer:1,why:"Đường kính bằng hai lần bán kính."},{q:"Bán kính 2 cm, diện tích gần bằng bao nhiêu?",options:["6,28 cm²","12,56 cm²","4 cm²","8 cm²"],answer:1,why:"S = 2 × 2 × 3,14 = 12,56 cm²."},{q:"Tâm hình tròn cách các điểm trên đường tròn như thế nào?",options:["Khoảng cách bằng nhau","Khoảng cách khác nhau","Luôn ở ngoài","Nằm trên đường tròn"],answer:0,why:"Mọi điểm trên đường tròn cách tâm cùng một khoảng bằng bán kính."}];
+  } else if (subject === "math" && /hình bình hành/i.test(topic)) {
+    kind = "parallelogram";
+    explanation = /diện tích/.test(topic) ? "Diện tích hình bình hành bằng đáy nhân với chiều cao tương ứng." : "Hình bình hành có hai cặp cạnh đối diện song song và bằng nhau.";
+    steps = [{title:"Quan sát",text:"Nhận biết hai cặp cạnh đối diện song song."},{title:"Thao tác",text:"Kéo thanh trượt để thay đổi đáy và chiều cao."},{title:"Kết luận",text:/diện tích/.test(topic) ? "S = a × h." : "Các cạnh đối diện song song và bằng nhau."}];
+    questions = [{q:"Hình bình hành có bao nhiêu cặp cạnh đối diện song song?",options:["1 cặp","2 cặp","3 cặp","Không có"],answer:1,why:"Có hai cặp cạnh đối diện song song."},{q:"Đáy 8 cm, chiều cao 4 cm. Diện tích là?",options:["12 cm²","24 cm²","32 cm²","64 cm²"],answer:2,why:"S = 8 × 4 = 32 cm²."},{q:"Chiều cao tương ứng vuông góc với cạnh nào?",options:["Đáy","Đường chéo","Cạnh bất kỳ","Không cần vuông góc"],answer:0,why:"Chiều cao vuông góc với đáy tương ứng."}];
+  } else if (subject === "math" && /hình chữ nhật|hình vuông/i.test(topic)) {
+    const square = /hình vuông/.test(topic) && !/chữ nhật/.test(topic);
+    kind = square ? "square" : "rectangle";
+    explanation = /diện tích/.test(topic) ? (square ? "Diện tích hình vuông bằng cạnh nhân cạnh." : "Diện tích hình chữ nhật bằng chiều dài nhân chiều rộng.") : (square ? "Hình vuông có bốn cạnh bằng nhau và bốn góc vuông." : "Hình chữ nhật có bốn góc vuông, các cạnh đối diện bằng nhau.");
+    steps = [{title:"Quan sát",text:"Nhận biết các cạnh và góc vuông."},{title:"Thao tác",text:"Kéo thanh trượt để thay đổi kích thước hình."},{title:"Vận dụng",text:/diện tích/.test(topic) ? (square ? "S = cạnh × cạnh." : "S = dài × rộng.") : "So sánh các cạnh và kiểm tra bốn góc vuông."}];
+    questions = [{q:square ? "Hình vuông có mấy cạnh bằng nhau?" : "Các cạnh đối diện của hình chữ nhật như thế nào?",options:["Không bằng nhau","Bằng nhau","Chỉ một cạnh","Không xác định"],answer:1,why:square ? "Bốn cạnh hình vuông bằng nhau." : "Mỗi cặp cạnh đối diện của hình chữ nhật bằng nhau."},{q:"Hình có bốn góc vuông là hình nào?",options:["Hình tam giác","Hình tròn","Hình chữ nhật","Hình thang bất kỳ"],answer:2,why:"Hình chữ nhật có bốn góc vuông."},{q:"Nếu hình vuông có cạnh 5 cm, diện tích là?",options:["10 cm²","20 cm²","25 cm²","30 cm²"],answer:2,why:"S = 5 × 5 = 25 cm²."}];
   } else if (subject === "math" && /đường tròn|hình tròn|hình chữ nhật|hình vuông|chu vi|diện tích/i.test(topic)) {
     kind = "geometry";
     explanation = "Quan sát hình, nhận biết các yếu tố hình học và liên hệ chúng với yêu cầu bài học.";
@@ -300,6 +317,10 @@ async function generate(input) {
   const topicKey = topic.toLocaleLowerCase("vi");
   if (/hình thang|diện tích hình thang/.test(topicKey)) plan.kind = "trapezoid";
   else if (/hình lập phương|khối lập phương/.test(topicKey)) plan.kind = "cube";
+  else if (/đường tròn|hình tròn|chu vi hình tròn|diện tích hình tròn/.test(topicKey)) plan.kind = "circle";
+  else if (/hình bình hành/.test(topicKey)) plan.kind = "parallelogram";
+  else if (/hình chữ nhật/.test(topicKey)) plan.kind = "rectangle";
+  else if (/hình vuông/.test(topicKey)) plan.kind = "square";
   else if (/hình hộp chữ nhật|khối hộp chữ nhật/.test(topicKey)) plan.kind = "cuboid";
   else if (/tam giác/.test(topicKey)) plan.kind = "triangle";
   else if (/hình chữ nhật/.test(topicKey)) plan.kind = "rectangle";
