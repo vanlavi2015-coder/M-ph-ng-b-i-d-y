@@ -28,32 +28,50 @@ body.present header{padding-top:12px;padding-bottom:12px}body.present main{max-w
 
 .area-video{margin:16px 0;padding:16px;border:1px solid #bfdbfe;border-radius:16px;background:linear-gradient(135deg,#eff6ff,#fff)}
 .area-video h3{margin:0 0 8px;color:#1d4ed8}.area-stage{min-height:210px;display:grid;place-items:center;background:#fff;border-radius:12px;border:1px solid #dbeafe;padding:8px;overflow:hidden}.area-stage svg{width:100%;max-width:560px;height:auto}.area-caption{font-weight:700;color:#17324d;text-align:center;margin:10px 0;min-height:24px}.video-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.video-controls button{border:0;border-radius:10px;padding:10px 14px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}.video-controls button.secondary{background:#e2e8f0;color:#17324d}.area-stage .moving{transition:all .7s ease}
-</style>
+\n.geometry-menu{display:grid;gap:16px;margin-top:10px}.menu-group{padding:12px;border:1px solid var(--line);border-radius:13px;background:#fbfdff}.menu-group>strong{display:block;margin-bottom:8px;color:#1d4ed8}.geometry-menu .chips{margin-top:0}.geometry-menu .chip{text-align:left;border-radius:10px;line-height:1.35;flex:1 1 135px;min-width:120px}.geometry-menu .chip:focus{outline:3px solid #93c5fd;outline-offset:2px}\n</style>
 </head>
 <body>
-<header><div class="brand"><div class="logo">✦</div><div><h1>Mô phỏng bài dạy AI</h1><p class="subtitle">Tạo hoạt động trực quan · Tương tác · Trình chiếu trên lớp</p></div></div></header>
+<header><div class="brand"><div class="logo">✦</div><div><h1>Mô phỏng bài dạy AI</h1><p class="subtitle">Chuyên đề hình học lớp 5 · Trực quan · Tương tác · Trình chiếu</p></div></div></header>
 <main>
 <section class="panel creator">
-<h2>🎯 Tạo mô phỏng mới</h2>
-<div class="field"><label for="topic">Tên bài học / yêu cầu</label><textarea id="topic" placeholder="Ví dụ: Mô phỏng diện tích hình thang lớp 5, cho học sinh thay đổi hai đáy và chiều cao...">Diện tích hình thang lớp 5</textarea></div>
-<div class="field"><label for="subject">Môn học</label><select id="subject"><option value="math">Toán</option><option value="vietnamese">Tiếng Việt</option><option value="science">Khoa học</option><option value="general">Hoạt động / môn khác</option></select></div>
-<div class="field"><label for="grade">Lớp</label><select id="grade"><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select></div>
-<button class="btn primary" id="generate">✨ Tạo mô phỏng</button>
+<h2>📐 Hình học lớp 5</h2>
+<p class="note">Chọn hình hoặc chủ đề để mở mô phỏng tương ứng. Công cụ chỉ phục vụ hình học lớp 5.</p>
+<div class="field"><label for="topic">Bài học đang chọn</label><textarea id="topic" placeholder="Chọn một chủ đề ở danh sách bên dưới">Diện tích hình thang lớp 5</textarea></div>
+<select id="subject" style="display:none" aria-hidden="true"><option value="math" selected>Toán</option></select>
+<select id="grade" style="display:none" aria-hidden="true"><option selected>5</option></select>
+<button class="btn primary" id="generate">✨ Mở mô phỏng đã chọn</button>
 <div class="status" id="status" role="status"></div>
-<p class="note">Khi được cấu hình khóa API AI trên máy chủ, công cụ sẽ tạo kịch bản theo yêu cầu. Nếu chưa có khóa, công cụ vẫn chạy với mô hình minh họa và câu hỏi mẫu.</p>
-<h2 style="margin-top:24px">⚡ Mẫu dùng nhanh</h2>
+<h2 style="margin-top:24px">Các hình và chủ đề</h2>
+<div class="geometry-menu">
+<div class="menu-group"><strong>Hình phẳng</strong>
 <div class="chips">
+<button class="chip" data-topic="Nhận biết hình tam giác lớp 5" data-subject="math">△ Hình tam giác</button>
+<button class="chip" data-topic="Diện tích hình tam giác lớp 5" data-subject="math">Diện tích tam giác</button>
+<button class="chip" data-topic="Diện tích hình thang lớp 5" data-subject="math">▱ Hình thang</button>
+<button class="chip" data-topic="Hình tròn, đường kính và bán kính lớp 5" data-subject="math">◯ Hình tròn</button>
+<button class="chip" data-topic="Chu vi hình tròn lớp 5" data-subject="math">Chu vi hình tròn</button>
+<button class="chip" data-topic="Diện tích hình tròn lớp 5" data-subject="math">Diện tích hình tròn</button>
+<button class="chip" data-topic="Diện tích hình bình hành lớp 5" data-subject="math">Hình bình hành</button>
+<button class="chip" data-topic="Chu vi và diện tích hình chữ nhật lớp 5" data-subject="math">Hình chữ nhật</button>
+<button class="chip" data-topic="Chu vi và diện tích hình vuông lớp 5" data-subject="math">Hình vuông</button>
+</div></div>
+<div class="menu-group"><strong>Hình khối 3D</strong>
+<div class="chips">
+<button class="chip" data-topic="Nhận biết hình lập phương lớp 5" data-subject="math">⬡ Hình lập phương</button>
 <button class="chip" data-topic="Diện tích xung quanh hình hộp chữ nhật lớp 5" data-subject="math">Diện tích xung quanh HHCN</button>
-<button class="chip" data-topic="Diện tích hình thang lớp 5" data-subject="math">Diện tích hình thang</button>
-<button class="chip" data-topic="Phép cộng hai số tự nhiên lớp 5" data-subject="math">Phép cộng số tự nhiên</button>
-<button class="chip" data-topic="Phép trừ số thập phân lớp 5" data-subject="math">Phép trừ số thập phân</button>
-<button class="chip" data-topic="Phép tính với phân số lớp 5" data-subject="math">Phân số</button>
-<button class="chip" data-topic="Tỉ số phần trăm lớp 5" data-subject="math">Tỉ số phần trăm</button>
-<button class="chip" data-topic="Đổi đơn vị đo độ dài lớp 5" data-subject="math">Đổi đơn vị đo</button>
-<button class="chip" data-topic="Số thập phân và giá trị các hàng" data-subject="math">Số thập phân</button>
-<button class="chip" data-topic="Nhận biết chủ ngữ và vị ngữ trong câu" data-subject="vietnamese">Chủ ngữ – vị ngữ</button>
-<button class="chip" data-topic="Vòng tuần hoàn của nước trong tự nhiên" data-subject="science">Vòng tuần hoàn nước</button>
+<button class="chip" data-topic="Diện tích toàn phần hình hộp chữ nhật lớp 5" data-subject="math">Diện tích toàn phần HHCN</button>
+<button class="chip" data-topic="Thể tích hình hộp chữ nhật lớp 5" data-subject="math">Thể tích HHCN</button>
+<button class="chip" data-topic="Thể tích hình lập phương lớp 5" data-subject="math">Thể tích HLP</button>
+<button class="chip" data-topic="Hình khai triển hình lập phương và hình hộp chữ nhật lớp 5" data-subject="math">Hình khai triển</button>
+</div></div>
+<div class="menu-group"><strong>Ôn tập và thực hành hình học</strong>
+<div class="chips">
+<button class="chip" data-topic="Ôn tập chu vi và diện tích các hình phẳng lớp 5" data-subject="math">Ôn tập chu vi, diện tích</button>
+<button class="chip" data-topic="Thực hành ghép hình và tangram lớp 5" data-subject="math">Ghép hình – tangram</button>
+<button class="chip" data-topic="Bài toán thực tế về diện tích và thể tích lớp 5" data-subject="math">Bài toán thực tế</button>
+</div></div>
 </div>
+<p class="note">Các mô phỏng sẽ được hoàn thiện theo từng chủ đề; chọn đúng bài học để xem hình và công thức tương ứng.</p>
 </section>
 <section class="panel">
 <div class="topline"><span class="tag" id="modeTag">BẢN MÔ PHỎNG TƯƠNG TÁC</span><div class="actions" style="margin:0"><button class="btn secondary" id="present">⛶ Trình chiếu</button><button class="btn light" id="print">In / lưu PDF</button></div></div>
