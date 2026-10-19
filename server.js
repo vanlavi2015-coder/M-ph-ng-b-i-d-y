@@ -205,7 +205,7 @@ function fallbackPlan(input) {
       {q:"Tổng hai số là 25, tỉ số 2 : 3. Số bé là?",options:["5","10","15","20"],answer:1,why:"Tổng phần 2+3=5; mỗi phần 25÷5=5; số bé 2×5=10."},
       {q:"Trên bản đồ 1 cm ứng với 1 km ngoài thực tế. 3 cm ứng với?",options:["300 m","1 km","3 km","30 km"],answer:2,why:"3 cm trên bản đồ ứng với 3 km ngoài thực tế."}
     ];
-  } else if (subject === "math" && /số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân/i.test(topic)) {
+  } else if (subject === "math" && /số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân|phép cộng|phép trừ|phép nhân|phép chia|cộng trừ|nhân chia|tính nhẩm|tính giá trị biểu thức|thứ tự thực hiện phép tính|ước lượng kết quả|tính toán/i.test(topic)) {
     kind = /thập phân/.test(topic) ? "decimal" : "arithmetic";
     explanation = "Thực hiện phép tính theo đúng thứ tự, đặt tính thẳng hàng khi cần và kiểm tra kết quả bằng phép tính ngược hoặc ước lượng.";
     steps = [
@@ -331,7 +331,7 @@ async function generate(input) {
   else if (/thể tích|xăng-ti-mét khối|đề-xi-mét khối|mét khối/.test(topicKey)) plan.kind = "volume";
   else if (/đơn vị đo diện tích|ki-lô-mét vuông|héc-ta|đo lường|đổi đơn vị/.test(topicKey)) plan.kind = "units";
   else if (/tỉ lệ bản đồ|bản đồ|tìm hai số khi biết tổng|tìm hai số khi biết hiệu/.test(topicKey)) plan.kind = "ratio";
-  else if (/số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân/.test(topicKey)) plan.kind = /thập phân/.test(topicKey) ? "decimal" : "arithmetic";
+  else if (/số tự nhiên|phép tính với số tự nhiên|cộng số thập phân|trừ số thập phân|nhân số thập phân|chia số thập phân|phép tính|làm tròn số thập phân|so sánh các số thập phân|phép cộng|phép trừ|phép nhân|phép chia|cộng trừ|nhân chia|tính nhẩm|tính giá trị biểu thức|thứ tự thực hiện phép tính|ước lượng kết quả|tính toán/.test(topicKey)) plan.kind = /thập phân/.test(topicKey) ? "decimal" : "arithmetic";
   else if (/số thập phân|hàng thập phân|phần mười|phần trăm/.test(topicKey)) plan.kind = "decimal";
   else if (/phân số|tử số|mẫu số|quy đồng/.test(topicKey)) plan.kind = "fraction";
   else if (/chủ ngữ|vị ngữ|trạng ngữ|từ đồng nghĩa|nhân hóa|câu ghép/.test(topicKey) || subject === "vietnamese") plan.kind = "sentence";
